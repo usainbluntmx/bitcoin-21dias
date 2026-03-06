@@ -65,12 +65,9 @@ export default function Chatbot() {
             });
 
             const data = await response.json();
-            console.log("Respuesta API:", JSON.stringify(data));
             const respuesta = data.content?.[0]?.text || "Perdón, no pude procesar eso. ¿Lo intentamos de nuevo?";
-
             setMensajes(prev => [...prev, { rol: "assistant", contenido: respuesta }]);
         } catch (error) {
-            console.error("Error completo:", error);
             setMensajes(prev => [...prev, {
                 rol: "assistant",
                 contenido: "Hubo un problema de conexión. ¿Lo intentamos de nuevo?"
@@ -89,20 +86,20 @@ export default function Chatbot() {
 
     return (
         <>
-            {/* Botón flotante */}
+            {/* Botón flotante — esquina inferior izquierda en mobile, derecha en desktop */}
             <button
                 onClick={() => setAbierto(!abierto)}
-                className="fixed bottom-6 right-6 w-14 h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition-all z-50"
+                className="fixed bottom-6 left-6 sm:left-auto sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center text-xl sm:text-2xl transition-all z-40"
             >
                 {abierto ? "✕" : "₿"}
             </button>
 
             {/* Ventana del chat */}
             {abierto && (
-                <div className="fixed bottom-24 right-6 w-80 sm:w-96 h-[500px] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col z-50">
+                <div className="fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 h-[70vh] sm:h-[500px] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col z-40">
 
                     {/* Header */}
-                    <div className="bg-orange-500 rounded-t-2xl px-4 py-3 flex items-center gap-3">
+                    <div className="bg-orange-500 rounded-t-2xl px-4 py-3 flex items-center gap-3 flex-shrink-0">
                         <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-orange-500 font-black text-sm">
                             ₿
                         </div>
@@ -110,6 +107,12 @@ export default function Chatbot() {
                             <p className="text-white font-bold text-sm">Satoshi</p>
                             <p className="text-orange-100 text-xs">Tu guía Bitcoin</p>
                         </div>
+                        <button
+                            onClick={() => setAbierto(false)}
+                            className="ml-auto text-white opacity-70 hover:opacity-100 text-xl leading-none"
+                        >
+                            ✕
+                        </button>
                     </div>
 
                     {/* Mensajes */}
@@ -121,8 +124,8 @@ export default function Chatbot() {
                             >
                                 <div
                                     className={`max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.rol === "user"
-                                        ? "bg-orange-500 text-white rounded-br-sm"
-                                        : "bg-gray-800 text-gray-200 rounded-bl-sm"
+                                            ? "bg-orange-500 text-white rounded-br-sm"
+                                            : "bg-gray-800 text-gray-100 rounded-bl-sm"
                                         }`}
                                 >
                                     {msg.contenido}
@@ -131,7 +134,7 @@ export default function Chatbot() {
                         ))}
                         {cargando && (
                             <div className="flex justify-start">
-                                <div className="bg-gray-800 text-gray-400 px-4 py-3 rounded-2xl rounded-bl-sm text-sm">
+                                <div className="bg-gray-800 text-gray-300 px-4 py-3 rounded-2xl rounded-bl-sm text-sm">
                                     Escribiendo...
                                 </div>
                             </div>
@@ -140,14 +143,14 @@ export default function Chatbot() {
                     </div>
 
                     {/* Input */}
-                    <div className="px-4 py-3 border-t border-gray-700 flex gap-2">
+                    <div className="px-4 py-3 border-t border-gray-700 flex gap-2 flex-shrink-0">
                         <input
                             type="text"
                             value={input}
                             onChange={e => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="Pregúntale a Satoshi..."
-                            className="flex-1 bg-gray-800 text-white text-sm px-4 py-2 rounded-xl border border-gray-700 focus:outline-none focus:border-orange-500 placeholder-gray-500"
+                            className="flex-1 bg-gray-800 text-white text-sm px-4 py-2 rounded-xl border border-gray-600 focus:outline-none focus:border-orange-500 placeholder-gray-400"
                         />
                         <button
                             onClick={enviar}

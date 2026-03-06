@@ -3,7 +3,7 @@ export default function ProgressBar({ completadas, total }) {
 
     return (
         <div className="w-full">
-            <div className="flex justify-between text-xs text-gray-400 mb-1">
+            <div className="flex justify-between text-xs text-gray-300 mb-1">
                 <span>{completadas} de {total} lecciones</span>
                 <span>{porcentaje}%</span>
             </div>

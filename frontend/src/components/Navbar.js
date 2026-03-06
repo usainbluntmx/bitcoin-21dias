@@ -17,7 +17,7 @@ export default function Navbar() {
                     to="/lecciones"
                     className={`text-sm font-medium transition-colors ${location.pathname.includes("lecciones")
                             ? "text-orange-500"
-                            : "text-gray-300 hover:text-white"
+                            : "text-gray-200 hover:text-white"
                         }`}
                 >
                     Lecciones
@@ -26,7 +26,7 @@ export default function Navbar() {
                     to="/progreso"
                     className={`text-sm font-medium transition-colors ${location.pathname === "/progreso"
                             ? "text-orange-500"
-                            : "text-gray-300 hover:text-white"
+                            : "text-gray-200 hover:text-white"
                         }`}
                 >
                     Mi Progreso
