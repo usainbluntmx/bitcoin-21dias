@@ -19,7 +19,7 @@ export default function Quiz({ leccionId, quiz, onAprobado }) {
 
     // Si ya fue aprobado en sesión anterior, notificar al padre
     // para que muestre el botón de siguiente
-    const yaCompletada = progreso.leccionesCompletadas.includes(leccionId);
+    // const yaCompletada = progreso.leccionesCompletadas.includes(leccionId);
 
     return (
         <div className="bg-gray-800 rounded-2xl p-6 mt-6 border border-gray-700">
