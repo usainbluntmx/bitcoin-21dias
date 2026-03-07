@@ -30,7 +30,7 @@ export const ProgressProvider = ({ children }) => {
                     .from("progreso")
                     .select("*")
                     .eq("user_id", user.id)
-                    .single();
+                    .maybeSingle();
 
                 if (data) {
                     const progresoNube = {
@@ -64,7 +64,7 @@ export const ProgressProvider = ({ children }) => {
                         .from("progreso")
                         .select("*")
                         .eq("user_id", session.user.id)
-                        .single();
+                        .maybeSingle();
 
                     if (data) {
                         setProgreso({
