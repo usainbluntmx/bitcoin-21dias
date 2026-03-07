@@ -29,15 +29,60 @@ export default function Chatbot() {
     ]);
     const [input, setInput] = useState("");
     const [cargando, setCargando] = useState(false);
+
+    // Estado para posición del botón arrastrable
+    const [pos, setPos] = useState({ x: null, y: null });
+    const [arrastrando, setArrastrando] = useState(false);
+    const offsetRef = useRef({ x: 0, y: 0 });
+    const btnRef = useRef(null);
     const bottomRef = useRef(null);
+    const isMobile = window.innerWidth < 640;
+
+    // Posición inicial: esquina inferior derecha
+    useEffect(() => {
+        setPos({
+            x: window.innerWidth - 80,
+            y: window.innerHeight - 80
+        });
+    }, []);
 
     useEffect(() => {
         if (abierto) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [mensajes, abierto]);
 
+    // Touch handlers para mobile
+    const handleTouchStart = (e) => {
+        if (!isMobile) return;
+        const touch = e.touches[0];
+        const rect = btnRef.current.getBoundingClientRect();
+        offsetRef.current = {
+            x: touch.clientX - rect.left,
+            y: touch.clientY - rect.top
+        };
+        setArrastrando(true);
+    };
+
+    const handleTouchMove = (e) => {
+        if (!arrastrando || !isMobile) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const newX = Math.min(Math.max(0, touch.clientX - offsetRef.current.x), window.innerWidth - 56);
+        const newY = Math.min(Math.max(0, touch.clientY - offsetRef.current.y), window.innerHeight - 56);
+        setPos({ x: newX, y: newY });
+    };
+
+    const handleTouchEnd = (e) => {
+        if (!isMobile) return;
+        setArrastrando(false);
+    };
+
+    // Mouse handlers para desktop (no arrastra, posición fija)
+    const handleClick = () => {
+        if (!arrastrando) setAbierto(!abierto);
+    };
+
     const enviar = async () => {
         if (!input.trim() || cargando) return;
-
         const nuevoMensaje = { rol: "user", contenido: input.trim() };
         const nuevosMensajes = [...mensajes, nuevoMensaje];
         setMensajes(nuevosMensajes);
@@ -84,20 +129,52 @@ export default function Chatbot() {
         }
     };
 
+    // Calcular posición de la ventana del chat relativa al botón
+    const calcularPosChat = () => {
+        if (!isMobile) return {};
+        const espacioAbajo = window.innerHeight - pos.y - 56;
+        const espacioArriba = pos.y;
+        const arriba = espacioAbajo < 420 && espacioArriba > espacioAbajo;
+
+        return {
+            position: "fixed",
+            left: Math.min(pos.x, window.innerWidth - 320),
+            top: arriba ? pos.y - 420 : pos.y + 64,
+            width: Math.min(320, window.innerWidth - 16),
+        };
+    };
+
+    if (pos.x === null) return null;
+
     return (
         <>
-            {/* Botón flotante — esquina inferior izquierda en mobile, derecha en desktop */}
+            {/* Botón flotante */}
             <button
-                onClick={() => setAbierto(!abierto)}
-                className="fixed bottom-6 left-6 sm:left-auto sm:right-6 w-12 h-12 sm:w-14 sm:h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center text-xl sm:text-2xl transition-all z-40"
+                ref={btnRef}
+                onClick={handleClick}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                style={isMobile ? {
+                    position: "fixed",
+                    left: pos.x,
+                    top: pos.y,
+                    touchAction: "none"
+                } : {}}
+                className={`${isMobile ? "" : "fixed bottom-6 right-6"} w-14 h-14 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition-colors z-50 select-none`}
             >
                 {abierto ? "✕" : "₿"}
             </button>
 
             {/* Ventana del chat */}
             {abierto && (
-                <div className="fixed bottom-24 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 h-[70vh] sm:h-[500px] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col z-40">
-
+                <div
+                    style={isMobile ? calcularPosChat() : {}}
+                    className={`${isMobile
+                            ? "fixed z-50"
+                            : "fixed bottom-24 right-6 w-96 z-50"
+                        } h-[420px] bg-gray-900 border border-gray-700 rounded-2xl shadow-2xl flex flex-col`}
+                >
                     {/* Header */}
                     <div className="bg-orange-500 rounded-t-2xl px-4 py-3 flex items-center gap-3 flex-shrink-0">
                         <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-orange-500 font-black text-sm">
