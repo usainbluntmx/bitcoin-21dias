@@ -67,18 +67,7 @@ export default function Perfil() {
             {/* Fondo */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 left-0 w-full h-1 bg-orange-500" />
-                <div
-                    className="absolute inset-0 opacity-3"
-                    style={{
-                        backgroundImage: `repeating-linear-gradient(
-              0deg, transparent, transparent 40px,
-              #F7931A 40px, #F7931A 41px
-            ), repeating-linear-gradient(
-              90deg, transparent, transparent 40px,
-              #F7931A 40px, #F7931A 41px
-            )`
-                    }}
-                />
+
             </div>
 
             <div className="relative z-10 max-w-lg mx-auto">
@@ -151,8 +140,8 @@ export default function Perfil() {
                                             key={av}
                                             onClick={() => setAvatar(av)}
                                             className={`h-10 flex items-center justify-center text-xl border transition-all ${avatar === av
-                                                    ? "border-orange-500 bg-orange-500 bg-opacity-20"
-                                                    : "border-gray-700 hover:border-gray-500"
+                                                ? "border-orange-500 bg-orange-500 bg-opacity-20"
+                                                : "border-gray-700 hover:border-gray-500"
                                                 }`}
                                         >
                                             {av}
@@ -221,8 +210,8 @@ export default function Perfil() {
                                 <div
                                     key={badge.semana}
                                     className={`p-3 text-center border transition-all ${obtenida
-                                            ? "border-orange-500 bg-orange-500 bg-opacity-10"
-                                            : "border-gray-800 opacity-30"
+                                        ? "border-orange-500 bg-orange-500 bg-opacity-10"
+                                        : "border-gray-800 opacity-30"
                                         }`}
                                 >
                                     <p className="text-3xl mb-1">{obtenida ? badge.emoji : "🔒"}</p>
