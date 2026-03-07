@@ -1,36 +1,94 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { supabase } from "../supabase";
 
 const ProgressContext = createContext();
 
 export const useProgress = () => useContext(ProgressContext);
 
-export const ProgressProvider = ({ children }) => {
-    const [progreso, setProgreso] = useState(() => {
-        try {
-            const guardado = localStorage.getItem("btc21_progreso");
-            return guardado ? JSON.parse(guardado) : {
-                leccionesCompletadas: [],
-                quizzesCorrectos: [],
-                quizzesIncorrectos: [],
-                nivel: null,
-                puntos: 0,
-                semanasBadges: []
-            };
-        } catch {
-            return {
-                leccionesCompletadas: [],
-                quizzesCorrectos: [],
-                quizzesIncorrectos: [],
-                nivel: null,
-                puntos: 0,
-                semanasBadges: []
-            };
-        }
-    });
+const PROGRESO_INICIAL = {
+    leccionesCompletadas: [],
+    quizzesCorrectos: [],
+    quizzesIncorrectos: [],
+    nivel: null,
+    puntos: 0,
+    semanasBadges: []
+};
 
+const cargarLocal = () => {
+    try {
+        const guardado = localStorage.getItem("btc21_progreso");
+        return guardado ? JSON.parse(guardado) : PROGRESO_INICIAL;
+    } catch {
+        return PROGRESO_INICIAL;
+    }
+};
+
+export const ProgressProvider = ({ children }) => {
+    const [progreso, setProgreso] = useState(cargarLocal);
+    const [userId, setUserId] = useState(null);
+    const [cargandoNube, setCargandoNube] = useState(true);
+
+    // Detectar sesión activa y cargar progreso desde Supabase
+    useEffect(() => {
+        const inicializar = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                setUserId(user.id);
+                const { data } = await supabase
+                    .from("progreso")
+                    .select("*")
+                    .eq("user_id", user.id)
+                    .single();
+
+                if (data) {
+                    const progresoNube = {
+                        leccionesCompletadas: data.lecciones_completadas || [],
+                        quizzesCorrectos: data.quizzes_correctos || [],
+                        quizzesIncorrectos: data.quizzes_incorrectos || [],
+                        nivel: data.nivel || null,
+                        puntos: data.puntos || 0,
+                        semanasBadges: data.semanas_badges || []
+                    };
+                    setProgreso(progresoNube);
+                    localStorage.setItem("btc21_progreso", JSON.stringify(progresoNube));
+                }
+            }
+            setCargandoNube(false);
+        };
+
+        inicializar();
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            async (event, session) => {
+                if (session?.user) {
+                    setUserId(session.user.id);
+                } else {
+                    setUserId(null);
+                }
+            }
+        );
+
+        return () => subscription.unsubscribe();
+    }, []);
+
+    // Guardar en localStorage y Supabase cuando cambia el progreso
     useEffect(() => {
         localStorage.setItem("btc21_progreso", JSON.stringify(progreso));
-    }, [progreso]);
+
+        if (userId && !cargandoNube) {
+            supabase.from("progreso").upsert({
+                user_id: userId,
+                lecciones_completadas: progreso.leccionesCompletadas,
+                quizzes_correctos: progreso.quizzesCorrectos,
+                quizzes_incorrectos: progreso.quizzesIncorrectos,
+                nivel: progreso.nivel,
+                puntos: progreso.puntos,
+                semanas_badges: progreso.semanasBadges,
+                updated_at: new Date().toISOString()
+            });
+        }
+    }, [progreso, userId, cargandoNube]);
 
     const setNivel = (nivel) => {
         setProgreso(prev => ({ ...prev, nivel }));
@@ -63,7 +121,6 @@ export const ProgressProvider = ({ children }) => {
     const registrarQuiz = (id, correcto) => {
         setProgreso(prev => {
             if (prev.quizzesCorrectos.includes(id)) return prev;
-
             if (correcto) {
                 return {
                     ...prev,
@@ -71,31 +128,30 @@ export const ProgressProvider = ({ children }) => {
                     puntos: prev.puntos + 15
                 };
             } else {
-                const yaIncorrecto = prev.quizzesIncorrectos || [];
                 return {
                     ...prev,
-                    quizzesIncorrectos: [...yaIncorrecto, id],
+                    quizzesIncorrectos: [...(prev.quizzesIncorrectos || []), id],
                     puntos: Math.max(0, prev.puntos - 5)
                 };
             }
         });
     };
 
-    const resetProgreso = () => {
+    const resetProgreso = async () => {
         localStorage.removeItem("btc21_progreso");
-        setProgreso({
-            leccionesCompletadas: [],
-            quizzesCorrectos: [],
-            quizzesIncorrectos: [],
-            nivel: null,
-            puntos: 0,
-            semanasBadges: []
-        });
+        if (userId) {
+            await supabase
+                .from("progreso")
+                .delete()
+                .eq("user_id", userId);
+        }
+        setProgreso(PROGRESO_INICIAL);
     };
 
     return (
         <ProgressContext.Provider value={{
             progreso,
+            cargandoNube,
             setNivel,
             completarLeccion,
             registrarQuiz,
