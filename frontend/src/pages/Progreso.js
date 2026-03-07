@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { useProgress } from "../context/ProgressContext";
 import { lecciones } from "../data/lecciones";
 import ProgressBar from "../components/ProgressBar";
 
 export default function Progreso() {
     const { progreso, resetProgreso } = useProgress();
+    const navigate = useNavigate();
     const completadas = progreso.leccionesCompletadas.length;
     const incorrectas = progreso.quizzesIncorrectos || [];
 
@@ -56,8 +58,8 @@ export default function Progreso() {
                                 <div
                                     key={badge.semana}
                                     className={`rounded-2xl p-4 text-center border-2 transition-all ${obtenida
-                                            ? "bg-gray-800 border-orange-500"
-                                            : "bg-gray-900 border-gray-800 opacity-40"
+                                        ? "bg-gray-800 border-orange-500"
+                                        : "bg-gray-900 border-gray-800 opacity-40"
                                         }`}
                                 >
                                     <p className="text-4xl mb-2">{obtenida ? badge.emoji : "🔒"}</p>
@@ -82,8 +84,8 @@ export default function Progreso() {
                                     <div
                                         key={i}
                                         className={`flex items-center gap-3 p-3 rounded-xl text-sm border ${despuesCorregida
-                                                ? "bg-gray-800 border-gray-700"
-                                                : "bg-red-950 border-red-800"
+                                            ? "bg-gray-800 border-gray-700"
+                                            : "bg-red-950 border-red-800"
                                             }`}
                                     >
                                         <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${despuesCorregida ? "bg-green-500 text-white" : "bg-red-500 text-white"
@@ -135,6 +137,7 @@ export default function Progreso() {
                     onClick={() => {
                         if (window.confirm("¿Seguro que quieres reiniciar todo tu progreso? Volverás a la pantalla de inicio.")) {
                             resetProgreso();
+                            navigate("/");
                         }
                     }}
                     className="w-full bg-gray-800 hover:bg-red-900 border-2 border-gray-700 hover:border-red-500 text-gray-400 hover:text-red-300 font-bold py-3 rounded-2xl transition-all text-sm"
