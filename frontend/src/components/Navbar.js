@@ -50,15 +50,7 @@ export default function Navbar({ session }) {
                 >
                     LECCIONES
                 </Link>
-                <Link
-                    to="/progreso"
-                    className={`text-xs font-black tracking-widest px-3 py-1 transition-all font-mono ${isActive("progreso")
-                        ? "text-black bg-orange-500"
-                        : "text-gray-400 hover:text-orange-500"
-                        }`}
-                >
-                    PROGRESO
-                </Link>
+
 
                 {/* Puntos */}
                 <div
