@@ -17,43 +17,43 @@ export default function Quiz({ leccionId, quiz, onAprobado }) {
 
     const correcto = seleccion === quiz.respuestaCorrecta;
 
-    // Si ya fue aprobado en sesión anterior, notificar al padre
-    // para que muestre el botón de siguiente
-    // const yaCompletada = progreso.leccionesCompletadas.includes(leccionId);
-
     return (
-        <div className="bg-gray-800 rounded-2xl p-6 mt-6 border border-gray-700">
+        <div className="bg-gray-900 border border-gray-700 p-6 mt-6 relative">
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-orange-500" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-orange-500" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-orange-500" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-500" />
+
             <div className="flex items-center gap-2 mb-4">
-                <span className="text-orange-500 text-xl">🧠</span>
-                <h3 className="text-white font-bold text-lg">Quiz</h3>
+                <p className="text-orange-500 text-xs font-black font-mono tracking-widest">🧠 QUIZ</p>
                 {yaAprobado && (
-                    <span className="ml-auto text-green-400 text-sm font-medium">✓ Aprobado</span>
+                    <span className="ml-auto text-green-400 text-xs font-mono font-bold">✓ APROBADO</span>
                 )}
             </div>
 
-            <p className="text-gray-200 mb-4 font-medium">{quiz.pregunta}</p>
+            <p className="text-white font-bold text-sm mb-4">{quiz.pregunta}</p>
 
-            <div className="flex flex-col gap-3 mb-4">
+            <div className="flex flex-col gap-2 mb-4">
                 {quiz.opciones.map((opcion, i) => {
-                    let estilo = "bg-gray-700 border-gray-600 text-gray-200 hover:border-orange-400 cursor-pointer";
+                    let estilo = "border-gray-700 bg-black text-gray-200 hover:border-orange-500 cursor-pointer";
 
                     if (respondido || yaAprobado) {
                         if (i === quiz.respuestaCorrecta) {
-                            estilo = "bg-green-900 border-green-500 text-green-200";
+                            estilo = "border-green-500 bg-green-950 text-green-200";
                         } else if (i === seleccion && !correcto) {
-                            estilo = "bg-red-900 border-red-500 text-red-200";
+                            estilo = "border-red-500 bg-red-950 text-red-200";
                         } else {
-                            estilo = "bg-gray-700 border-gray-600 text-gray-400 cursor-default";
+                            estilo = "border-gray-800 bg-black text-gray-600 cursor-default";
                         }
                     } else if (seleccion === i) {
-                        estilo = "bg-orange-900 border-orange-500 text-orange-200 cursor-pointer";
+                        estilo = "border-orange-500 bg-orange-950 text-orange-200 cursor-pointer";
                     }
 
                     return (
                         <button
                             key={i}
                             onClick={() => !respondido && !yaAprobado && setSeleccion(i)}
-                            className={`text-left px-4 py-3 rounded-xl border-2 transition-all text-sm ${estilo}`}
+                            className={`text-left px-4 py-3 border-2 transition-all text-sm font-mono ${estilo}`}
                         >
                             {opcion}
                         </button>
@@ -65,29 +65,29 @@ export default function Quiz({ leccionId, quiz, onAprobado }) {
                 <button
                     onClick={handleResponder}
                     disabled={seleccion === null}
-                    className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 rounded-xl transition-colors"
+                    className="w-full bg-orange-500 hover:bg-orange-400 disabled:bg-gray-800 disabled:text-gray-600 text-black font-black py-3 text-xs tracking-widest uppercase font-mono transition-colors"
                 >
-                    Responder
+                    RESPONDER
                 </button>
             )}
 
             {respondido && !correcto && (
-                <div className="mt-4 p-4 rounded-xl text-sm bg-red-900 text-red-200">
-                    <p className="font-bold mb-1">❌ No exactamente...</p>
-                    <p>{quiz.explicacion}</p>
+                <div className="mt-4 p-4 border border-red-700 bg-red-950 text-sm">
+                    <p className="text-red-300 font-black font-mono mb-1">✗ INCORRECTO — 5 PTS</p>
+                    <p className="text-red-200 text-xs">{quiz.explicacion}</p>
                     <button
                         onClick={() => { setSeleccion(null); setRespondido(false); }}
-                        className="mt-3 w-full bg-red-800 hover:bg-red-700 text-white font-bold py-2 rounded-xl transition-colors"
+                        className="mt-3 w-full border border-red-700 hover:border-red-400 text-red-400 font-black py-2 text-xs tracking-widest uppercase font-mono transition-colors"
                     >
-                        Intentar de nuevo
+                        INTENTAR DE NUEVO
                     </button>
                 </div>
             )}
 
             {(respondido && correcto) || yaAprobado ? (
-                <div className="mt-4 p-4 rounded-xl text-sm bg-green-900 text-green-200">
-                    <p className="font-bold mb-1">✅ ¡Correcto! +15 pts</p>
-                    <p>{quiz.explicacion}</p>
+                <div className="mt-4 p-4 border border-green-700 bg-green-950 text-sm">
+                    <p className="text-green-300 font-black font-mono mb-1">✓ CORRECTO +15 PTS</p>
+                    <p className="text-green-200 text-xs">{quiz.explicacion}</p>
                 </div>
             ) : null}
         </div>
