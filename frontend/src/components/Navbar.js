@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useProgress } from "../context/ProgressContext";
 import { supabase } from "../supabase";
 import { useEffect, useState } from "react";
@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 export default function Navbar({ session }) {
     const { progreso } = useProgress();
     const location = useLocation();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [avatar, setAvatar] = useState("🟠");
 
     useEffect(() => {
@@ -44,8 +44,8 @@ export default function Navbar({ session }) {
                 <Link
                     to="/lecciones"
                     className={`text-xs font-black tracking-widest px-3 py-1 transition-all font-mono ${isActive("lecciones")
-                            ? "text-black bg-orange-500"
-                            : "text-gray-400 hover:text-orange-500"
+                        ? "text-black bg-orange-500"
+                        : "text-gray-400 hover:text-orange-500"
                         }`}
                 >
                     LECCIONES
@@ -53,8 +53,8 @@ export default function Navbar({ session }) {
                 <Link
                     to="/progreso"
                     className={`text-xs font-black tracking-widest px-3 py-1 transition-all font-mono ${isActive("progreso")
-                            ? "text-black bg-orange-500"
-                            : "text-gray-400 hover:text-orange-500"
+                        ? "text-black bg-orange-500"
+                        : "text-gray-400 hover:text-orange-500"
                         }`}
                 >
                     PROGRESO
