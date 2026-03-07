@@ -24,11 +24,7 @@ export default function CalculadoraDCA() {
     const calcularDCA = () => {
         let totalInvertidoUSD = 0;
         let totalBTC = 0;
-
-        const años = Object.keys(PRECIOS_BTC)
-            .map(Number)
-            .filter(a => a >= anioInicio);
-
+        const años = Object.keys(PRECIOS_BTC).map(Number).filter(a => a >= anioInicio);
         años.forEach(año => {
             MESES.forEach(mes => {
                 const precio = PRECIOS_BTC[año]?.[mes];
@@ -38,60 +34,49 @@ export default function CalculadoraDCA() {
                 totalBTC += aportUSD / precio;
             });
         });
-
         const valorHoyUSD = totalBTC * PRECIO_ACTUAL;
         const valorHoyMXN = valorHoyUSD * TIPO_CAMBIO;
         const invertidoMXN = totalInvertidoUSD * TIPO_CAMBIO;
         const gananciaUSD = valorHoyUSD - totalInvertidoUSD;
         const multiplo = valorHoyUSD / totalInvertidoUSD;
         const mesesTotales = años.length * 12;
-
-        return {
-            invertidoMXN,
-            valorHoyMXN,
-            gananciaMXN: gananciaUSD * TIPO_CAMBIO,
-            multiplo,
-            totalBTC,
-            mesesTotales
-        };
+        return { invertidoMXN, valorHoyMXN, gananciaMXN: gananciaUSD * TIPO_CAMBIO, multiplo, totalBTC, mesesTotales };
     };
 
     const resultado = calcularDCA();
 
-    const fmt = (n) => n.toLocaleString("es-MX", {
-        style: "currency",
-        currency: "MXN",
-        maximumFractionDigits: 0
-    });
+    const fmt = (n) => n.toLocaleString("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
 
     return (
-        <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 my-6">
-            <h3 className="text-white font-bold text-lg mb-1">📈 Calculadora DCA</h3>
-            <p className="text-gray-400 text-sm mb-5">
-                ¿Qué pasaría si hubieras ahorrado una cantidad fija en Bitcoin cada mes?
-            </p>
+        <div className="bg-gray-900 border border-orange-500 border-opacity-40 p-6 my-6 relative">
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-orange-500" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-orange-500" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-orange-500" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-500" />
+
+            <p className="text-white font-black text-base mb-1 font-mono tracking-wide">📈 CALCULADORA DCA</p>
+            <p className="text-gray-300 text-sm mb-5">¿Qué pasaría si hubieras ahorrado una cantidad fija en Bitcoin cada mes?</p>
 
             <div className="flex flex-col gap-4 mb-6">
                 <div>
-                    <label className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">
+                    <label className="text-gray-200 text-sm font-bold mb-2 block">
                         Ahorro mensual en pesos
                     </label>
                     <input
                         type="number"
                         value={aporteMensual}
                         onChange={e => setAporteMensual(Number(e.target.value))}
-                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-xl border border-gray-600 focus:outline-none focus:border-orange-500"
+                        className="w-full bg-black border border-gray-600 focus:border-orange-500 text-white px-4 py-3 outline-none text-base"
                     />
                 </div>
-
                 <div>
-                    <label className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">
+                    <label className="text-gray-200 text-sm font-bold mb-2 block">
                         Desde el año
                     </label>
                     <select
                         value={anioInicio}
                         onChange={e => setAnioInicio(Number(e.target.value))}
-                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-xl border border-gray-600 focus:outline-none focus:border-orange-500"
+                        className="w-full bg-black border border-gray-600 focus:border-orange-500 text-white px-4 py-3 outline-none text-base"
                     >
                         {Object.keys(PRECIOS_BTC).slice(0, -1).map(año => (
                             <option key={año} value={año}>{año}</option>
@@ -101,45 +86,42 @@ export default function CalculadoraDCA() {
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-gray-900 rounded-xl p-4">
-                    <p className="text-gray-500 text-xs uppercase tracking-wider mb-1">Total invertido</p>
+                <div className="bg-black border border-gray-700 p-4">
+                    <p className="text-gray-300 text-xs font-bold mb-1">Total invertido</p>
                     <p className="text-white font-black text-lg">{fmt(resultado.invertidoMXN)}</p>
-                    <p className="text-gray-500 text-xs mt-1">{resultado.mesesTotales} meses</p>
+                    <p className="text-gray-300 text-xs mt-1">{resultado.mesesTotales} meses</p>
                 </div>
-
-                <div className="bg-green-950 border border-green-800 rounded-xl p-4">
-                    <p className="text-green-400 text-xs uppercase tracking-wider mb-1">Valor hoy</p>
-                    <p className="text-green-200 font-black text-lg">{fmt(resultado.valorHoyMXN)}</p>
-                    <p className="text-green-400 text-xs mt-1">~{resultado.multiplo.toFixed(1)}x tu dinero</p>
+                <div className="bg-green-950 border border-green-700 p-4">
+                    <p className="text-green-300 text-xs font-bold mb-1">Valor hoy</p>
+                    <p className="text-white font-black text-lg">{fmt(resultado.valorHoyMXN)}</p>
+                    <p className="text-green-300 text-xs mt-1">~{resultado.multiplo.toFixed(1)}x tu dinero</p>
                 </div>
             </div>
 
-            <div className="bg-orange-950 border border-orange-800 rounded-xl p-4 mb-4">
+            <div className="bg-orange-950 border border-orange-700 p-4 mb-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <p className="text-orange-400 text-xs uppercase tracking-wider mb-1">Ganancia total</p>
-                        <p className="text-orange-200 font-black text-2xl">{fmt(resultado.gananciaMXN)}</p>
+                        <p className="text-orange-300 text-xs font-bold mb-1">Ganancia total</p>
+                        <p className="text-white font-black text-2xl">{fmt(resultado.gananciaMXN)}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-orange-400 text-xs uppercase tracking-wider mb-1">Bitcoin acumulado</p>
-                        <p className="text-orange-200 font-black text-lg">
-                            {resultado.totalBTC.toFixed(6)} BTC
-                        </p>
+                        <p className="text-orange-300 text-xs font-bold mb-1">Bitcoin acumulado</p>
+                        <p className="text-white font-black text-lg">{resultado.totalBTC.toFixed(6)} BTC</p>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-gray-900 rounded-xl p-4">
-                <p className="text-gray-400 text-sm text-center">
+            <div className="bg-black border border-gray-700 p-4">
+                <p className="text-gray-200 text-sm text-center">
                     Ahorrando solo{" "}
-                    <span className="text-orange-400 font-bold">{fmt(aporteMensual)} al mes</span>
+                    <span className="text-orange-400 font-black">{fmt(aporteMensual)} al mes</span>
                     {" "}desde {anioInicio}, hoy tendrías{" "}
-                    <span className="text-green-400 font-bold">{fmt(resultado.valorHoyMXN)}</span>
+                    <span className="text-green-400 font-black">{fmt(resultado.valorHoyMXN)}</span>
                 </p>
             </div>
 
-            <p className="text-gray-600 text-xs mt-3 text-center">
-                Precios históricos: CoinGecko. Tipo de cambio: $17.20 MXN/USD. Resultados pasados no garantizan rendimientos futuros.
+            <p className="text-gray-400 text-xs mt-3 text-center">
+                Precios históricos: CoinGecko · Tipo de cambio: $17.20 MXN/USD · Resultados pasados no garantizan rendimientos futuros
             </p>
         </div>
     );

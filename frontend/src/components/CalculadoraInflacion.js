@@ -32,31 +32,35 @@ export default function CalculadoraInflacion() {
     const fmt = (n) => n.toLocaleString("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 });
 
     return (
-        <div className="bg-gray-800 rounded-2xl p-6 border border-gray-700 my-6">
-            <h3 className="text-white font-bold text-lg mb-1">💸 Calculadora: Peso vs Bitcoin</h3>
-            <p className="text-gray-400 text-sm mb-5">Descubre cuánto ha perdido tu dinero vs cuánto hubieras ganado</p>
+        <div className="bg-gray-900 border border-orange-500 border-opacity-40 p-6 my-6 relative">
+            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-orange-500" />
+            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-orange-500" />
+            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-orange-500" />
+            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-500" />
+
+            <p className="text-white font-black text-base mb-1 font-mono tracking-wide">💸 PESO VS BITCOIN</p>
+            <p className="text-gray-300 text-sm mb-5">Descubre cuánto ha perdido tu dinero vs cuánto hubieras ganado</p>
 
             <div className="flex flex-col gap-4 mb-6">
                 <div>
-                    <label className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">
+                    <label className="text-gray-200 text-sm font-bold mb-2 block">
                         ¿Cuántos pesos tenías ahorrados?
                     </label>
                     <input
                         type="number"
                         value={cantidad}
                         onChange={e => setCantidad(Number(e.target.value))}
-                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-xl border border-gray-600 focus:outline-none focus:border-orange-500"
+                        className="w-full bg-black border border-gray-600 focus:border-orange-500 text-white px-4 py-3 outline-none text-base"
                     />
                 </div>
-
                 <div>
-                    <label className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">
+                    <label className="text-gray-200 text-sm font-bold mb-2 block">
                         ¿Desde qué año?
                     </label>
                     <select
                         value={anioInicio}
                         onChange={e => setAnioInicio(Number(e.target.value))}
-                        className="w-full bg-gray-700 text-white px-4 py-3 rounded-xl border border-gray-600 focus:outline-none focus:border-orange-500"
+                        className="w-full bg-black border border-gray-600 focus:border-orange-500 text-white px-4 py-3 outline-none text-base"
                     >
                         {DATOS.slice(0, -1).map(d => (
                             <option key={d.año} value={d.año}>{d.año}</option>
@@ -66,29 +70,24 @@ export default function CalculadoraInflacion() {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-                <div className="bg-red-950 border border-red-800 rounded-xl p-4">
-                    <p className="text-red-400 text-xs font-bold uppercase tracking-wider mb-1">
-                        💀 Guardado en pesos
-                    </p>
-                    <p className="text-red-200 text-2xl font-black">{fmt(valorHoyPesos)}</p>
-                    <p className="text-red-400 text-sm mt-1">
+                <div className="bg-red-950 border border-red-700 p-4">
+                    <p className="text-red-300 text-sm font-bold mb-1">💀 Guardado en pesos</p>
+                    <p className="text-white text-2xl font-black">{fmt(valorHoyPesos)}</p>
+                    <p className="text-red-300 text-sm mt-1">
                         Perdiste {porcentajePerdido}% de tu poder adquisitivo
                     </p>
                 </div>
-
-                <div className="bg-green-950 border border-green-800 rounded-xl p-4">
-                    <p className="text-green-400 text-xs font-bold uppercase tracking-wider mb-1">
-                        🚀 Guardado en Bitcoin
-                    </p>
-                    <p className="text-green-200 text-2xl font-black">{fmt(valorBTChoy)}</p>
-                    <p className="text-green-400 text-sm mt-1">
+                <div className="bg-green-950 border border-green-700 p-4">
+                    <p className="text-green-300 text-sm font-bold mb-1">🚀 Guardado en Bitcoin</p>
+                    <p className="text-white text-2xl font-black">{fmt(valorBTChoy)}</p>
+                    <p className="text-green-300 text-sm mt-1">
                         Tu dinero se multiplicó ~{gananciaMultiplo}x
                     </p>
                 </div>
             </div>
 
-            <p className="text-gray-600 text-xs mt-4 text-center">
-                Datos de inflación: Banxico. Precio BTC: CoinGecko. Tipo de cambio referencial: $17 MXN/USD.
+            <p className="text-gray-400 text-xs mt-4 text-center">
+                Datos de inflación: Banxico · Precio BTC: CoinGecko · Tipo de cambio referencial: $17 MXN/USD
             </p>
         </div>
     );

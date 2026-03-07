@@ -96,7 +96,7 @@ export default function Perfil() {
                             <p className="text-white font-black text-xl font-mono">
                                 {nombre || "SIN NOMBRE"}
                             </p>
-                            <p className="text-gray-500 text-xs font-mono">{user?.email}</p>
+                            <p className="text-gray-300 text-xs font-mono">{user?.email}</p>
                             <p className="text-orange-500 text-xs font-mono mt-1">
                                 {progreso.nivel === "principiante" ? "🌱 PRINCIPIANTE" : "⚡ INTERMEDIO"}
                             </p>
@@ -113,7 +113,7 @@ export default function Perfil() {
                     ) : (
                         <div className="flex flex-col gap-3">
                             <div>
-                                <p className="text-gray-500 text-xs font-mono mb-1 tracking-wider">NOMBRE</p>
+                                <p className="text-gray-200 text-xs font-mono mb-1 tracking-wider">NOMBRE</p>
                                 <input
                                     type="text"
                                     value={nombre}
@@ -124,15 +124,15 @@ export default function Perfil() {
                                 />
                             </div>
                             <div>
-                                <p className="text-gray-500 text-xs font-mono mb-2 tracking-wider">AVATAR</p>
+                                <p className="text-gray-200 text-xs font-mono mb-2 tracking-wider">AVATAR</p>
                                 <div className="grid grid-cols-5 gap-2">
                                     {AVATARES.map(av => (
                                         <button
                                             key={av}
                                             onClick={() => setAvatar(av)}
                                             className={`h-10 flex items-center justify-center text-xl border transition-all ${avatar === av
-                                                    ? "border-orange-500 bg-orange-500 bg-opacity-20"
-                                                    : "border-gray-700 hover:border-gray-500"
+                                                ? "border-orange-500 bg-orange-500 bg-opacity-20"
+                                                : "border-gray-700 hover:border-gray-500"
                                                 }`}
                                         >
                                             {av}
@@ -175,7 +175,7 @@ export default function Perfil() {
                             <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-orange-500" />
                             <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-orange-500" />
                             <p className="text-orange-500 font-black text-2xl font-mono">{stat.valor}</p>
-                            <p className="text-gray-500 text-xs font-mono mt-1">{stat.label}</p>
+                            <p className="text-gray-300 text-xs font-mono mt-1">{stat.label}</p>
                         </div>
                     ))}
                 </div>
@@ -186,7 +186,7 @@ export default function Perfil() {
                     <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-orange-500" />
                     <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-orange-500" />
                     <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-500" />
-                    <p className="text-white font-black font-mono text-xs tracking-widest mb-3">PROGRESO GENERAL</p>
+                    <p className="text-orange-400 font-black font-mono text-xs tracking-widest mb-3">PROGRESO GENERAL</p>
                     <ProgressBar completadas={completadas} total={21} />
                 </div>
 
@@ -196,7 +196,7 @@ export default function Perfil() {
                     <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-orange-500" />
                     <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-orange-500" />
                     <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-500" />
-                    <p className="text-white font-black font-mono text-xs tracking-widest mb-4">INSIGNIAS</p>
+                    <p className="text-orange-400 font-black font-mono text-xs tracking-widest mb-4">INSIGNIAS</p>
                     <div className="grid grid-cols-3 gap-3">
                         {[
                             { semana: 1, emoji: "🥉", titulo: "SEMANA 1", desc: "El Problema" },
@@ -208,13 +208,13 @@ export default function Perfil() {
                                 <div
                                     key={badge.semana}
                                     className={`p-3 text-center border transition-all ${obtenida
-                                            ? "border-orange-500 bg-orange-500 bg-opacity-10"
-                                            : "border-gray-800 opacity-30"
+                                        ? "border-orange-500 bg-orange-500 bg-opacity-10"
+                                        : "border-gray-800 opacity-30"
                                         }`}
                                 >
                                     <p className="text-3xl mb-1">{obtenida ? badge.emoji : "🔒"}</p>
                                     <p className="text-white text-xs font-black font-mono">{badge.titulo}</p>
-                                    <p className="text-gray-500 text-xs font-mono">{badge.desc}</p>
+                                    <p className="text-gray-300 text-xs font-mono">{badge.desc}</p>
                                 </div>
                             );
                         })}
@@ -228,7 +228,7 @@ export default function Perfil() {
                         <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-orange-500" />
                         <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-orange-500" />
                         <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-500" />
-                        <p className="text-white font-black font-mono text-xs tracking-widest mb-4">⚠️ LECCIONES CON ERRORES</p>
+                        <p className="text-orange-400 font-black font-mono text-xs tracking-widest mb-4">⚠️ LECCIONES CON ERRORES</p>
                         <div className="flex flex-col gap-2">
                             {incorrectas.map((id, i) => {
                                 const leccion = lecciones.find(l => l.id === id);
@@ -238,8 +238,8 @@ export default function Perfil() {
                                     <div
                                         key={i}
                                         className={`flex items-center gap-3 p-3 text-sm border ${corregida
-                                                ? "border-gray-800 bg-gray-900"
-                                                : "border-red-900 bg-red-950 bg-opacity-30"
+                                            ? "border-gray-800 bg-gray-900"
+                                            : "border-red-900 bg-red-950 bg-opacity-30"
                                             }`}
                                     >
                                         <span className={`w-6 h-6 flex items-center justify-center text-xs font-black flex-shrink-0 ${corregida ? "bg-green-500 text-white" : "bg-red-500 text-white"
@@ -263,7 +263,7 @@ export default function Perfil() {
                     <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-orange-500" />
                     <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-orange-500" />
                     <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-500" />
-                    <p className="text-white font-black font-mono text-xs tracking-widest mb-4">TODAS LAS LECCIONES</p>
+                    <p className="text-orange-400 font-black font-mono text-xs tracking-widest mb-4">TODAS LAS LECCIONES</p>
                     <div className="flex flex-col gap-2">
                         {lecciones.map((leccion) => {
                             const completada = progreso.leccionesCompletadas.includes(leccion.id);
